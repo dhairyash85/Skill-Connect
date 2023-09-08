@@ -19,6 +19,10 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JPasswordField;
 import skillConnect.homepage;
+import java.awt.Window.Type;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 class NewPage extends JFrame{
 	  NewPage()  
 	    {  
@@ -30,8 +34,7 @@ class NewPage extends JFrame{
 }
 
 public class login extends JFrame {
-	public String us="nigger";
-	public String pass="cotton";
+
 	private JPanel contentPane;
 	public JTextField username;
 	private JPasswordField password;
@@ -56,17 +59,20 @@ public class login extends JFrame {
 	 * Create the frame.
 	 */
 	public login() {
+		setType(Type.POPUP);
+		setTitle("Skill Connect");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(153, 255, 255));
+		contentPane.setBackground(new Color(186, 198, 207));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Password");
-		lblNewLabel.setBounds(51, 132, 61, 14);
+		lblNewLabel.setBounds(10, 133, 99, 14);
 		contentPane.add(lblNewLabel);
 		
 		username = new JTextField();
@@ -77,10 +83,11 @@ public class login extends JFrame {
 		contentPane.add(username);
 		
 		JLabel lblUserName = new JLabel("User Name");
-		lblUserName.setBounds(51, 92, 61, 14);
+		lblUserName.setBounds(10, 92, 99, 14);
 		contentPane.add(lblUserName);
 		
 		JButton login = new JButton("Login");
+		
 		
 		login.setBounds(119, 185, 229, 23);
 		contentPane.add(login);
@@ -98,13 +105,14 @@ public class login extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String s=username.getText();
+				@SuppressWarnings("deprecation")
 				String p=password.getText();
 				s.trim();
 				p.trim();
-				if((s.equals("nigger"))||(p.equals("cotton"))) {
+				if((s.equals("admin"))&&(p.equals("admin"))) {
 					homepage ss=new homepage();
 					ss.setVisible(true);
-					setVisible(false);
+					dispose();
 				}
 				else mesg.setText("Incorrect Password");
 			}
