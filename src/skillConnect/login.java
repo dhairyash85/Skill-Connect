@@ -22,7 +22,12 @@ import skillConnect.homepage;
 import java.awt.Window.Type;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
+import java.sql.*;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.DebugGraphics;
+import java.awt.ComponentOrientation;
+import skillConnect.*;
 class NewPage extends JFrame{
 	  NewPage()  
 	    {  
@@ -59,19 +64,29 @@ public class login extends JFrame {
 	 * Create the frame.
 	 */
 	public login() {
+		try{
+		Class.forName("com.mysql.jdbc.Driver");
+		String url="jdbc:mysql://localhost:3306/SkillConnect?characterEncoding=utf8&autoReconnect=true&useSSL=false";
+		String user="root";
+		String pass="PW";
+		Connection con;
+		con = DriverManager.getConnection(url, user, pass);
+
 		setType(Type.POPUP);
 		setTitle("Skill Connect");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(186, 198, 207));
+		contentPane.setBackground(new Color(0, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Password");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+		lblNewLabel.setForeground(new Color(255, 255, 255));
 		lblNewLabel.setBounds(10, 133, 99, 14);
 		contentPane.add(lblNewLabel);
 		
@@ -83,13 +98,15 @@ public class login extends JFrame {
 		contentPane.add(username);
 		
 		JLabel lblUserName = new JLabel("User Name");
+		lblUserName.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+		lblUserName.setForeground(new Color(255, 255, 255));
 		lblUserName.setBounds(10, 92, 99, 14);
 		contentPane.add(lblUserName);
 		
 		JButton login = new JButton("Login");
 		
 		
-		login.setBounds(119, 185, 229, 23);
+		login.setBounds(119, 185, 99, 23);
 		contentPane.add(login);
 		
 		JLabel mesg = new JLabel("");
@@ -101,6 +118,24 @@ public class login extends JFrame {
 		password.setMinimumSize(new Dimension(40, 20));
 		password.setBounds(119, 130, 229, 21);
 		contentPane.add(password);
+		
+		JButton signup = new JButton("Sign-Up");
+		signup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				signUp ob=new signUp();
+				ob.setVisible(true);
+			}
+		});
+		signup.setDebugGraphicsOptions(DebugGraphics.LOG_OPTION);
+		signup.setBounds(249, 185, 99, 23);
+		contentPane.add(signup);
+		
+		JLabel lblNewLabel_1 = new JLabel("Skill Connect");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 31));
+		lblNewLabel_1.setBounds(119, 25, 229, 38);
+		contentPane.add(lblNewLabel_1);
 		login.addActionListener((ActionListener) new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -109,14 +144,27 @@ public class login extends JFrame {
 				String p=password.getText();
 				s.trim();
 				p.trim();
-				if((s.equals("admin"))&&(p.equals("admin"))) {
-					homepage ss=new homepage();
-					ss.setVisible(true);
-					dispose();
-				}
-				else mesg.setText("Incorrect Password");
+				
+										try {
+					Statement stmt=con.createStatement();
+					ResultSet rs=stmt.executeQuery("select * from user where username='" + s + "' and password='" + p + "'");  
+					if(rs.next()){
+						homepage ob=new homepage(s);
+						ob.setVisible(true);
+						dispose();
+					}
+					else mesg.setText("Incorrect Password");
+				
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}  
 			}
 		});
+		}
+		catch(Exception g)
+		{ 
+			System.out.println(g);
+		}
 	}
 }
 
